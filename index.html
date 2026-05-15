@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portafolio Profesional 3D</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- Configuración de Import Maps para Three.js y sus addons -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+<body>
+    <header class="glass-header">
+        <div class="logo">Juan Pérez</div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="#hero">Inicio</a></li>
+                <li><a href="#about">Sobre mí</a></li>
+                <li><a href="#skills">Habilidades</a></li>
+                <li><a href="#projects">Proyectos</a></li>
+                <li><a href="#showcase">Modelo 3D</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="hero" class="hero-section">
+            <div class="hero-content glass-panel">
+                <div class="avatar-container">
+                    <img src="https://ui-avatars.com/api/?name=Juan+Perez&background=0D8ABC&color=fff&size=150" alt="Avatar de Juan Pérez" class="avatar">
+                </div>
+                <h1>Hola, soy <span>Juan Pérez</span></h1>
+                <p>Desarrollador Frontend Creativo</p>
+                <a href="#projects" class="cta-button">Ver mi trabajo</a>
+            </div>
+            <!-- Elementos decorativos de fondo -->
+            <div class="bg-shape shape1"></div>
+            <div class="bg-shape shape2"></div>
+        </section>
+
+        <section id="about" class="about-section">
+            <h2 class="section-title">Sobre mí</h2>
+            <div class="about-content glass-panel">
+                <p>Soy un apasionado desarrollador frontend con un fuerte enfoque en crear experiencias de usuario interactivas, accesibles y visualmente asombrosas. Combino mis habilidades en desarrollo web con mi interés por las tecnologías 3D para llevar la web al siguiente nivel. Siempre en constante aprendizaje y en búsqueda de nuevos retos.</p>
+            </div>
+        </section>
+
+        <section id="skills" class="skills-section">
+            <h2 class="section-title">Habilidades Técnicas</h2>
+            <div class="skills-grid">
+                <div class="skill-card glass-panel">
+                    <h3>HTML5 / CSS3</h3>
+                    <p>Semántica, Accesibilidad, Flexbox, CSS Grid y animaciones fluidas.</p>
+                </div>
+                <div class="skill-card glass-panel">
+                    <h3>JavaScript (ES6+)</h3>
+                    <p>Lógica robusta, manipulación del DOM, y asincronía.</p>
+                </div>
+                <div class="skill-card glass-panel">
+                    <h3>Three.js</h3>
+                    <p>Gráficos 3D en el navegador, integración de modelos y animaciones complejas.</p>
+                </div>
+                <div class="skill-card glass-panel">
+                    <h3>Frameworks UI</h3>
+                    <p>Experiencia trabajando con React y ecosistemas modernos.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="projects-section">
+            <h2 class="section-title">Proyectos Destacados</h2>
+            <div class="projects-gallery">
+                <div class="project-card glass-panel">
+                    <div class="project-image">Proyecto 1</div>
+                    <div class="project-info">
+                        <h3>Plataforma E-commerce</h3>
+                        <p>Una tienda virtual responsiva con carrito de compras dinámico.</p>
+                    </div>
+                </div>
+                <div class="project-card glass-panel">
+                    <div class="project-image">Proyecto 2</div>
+                    <div class="project-info">
+                        <h3>Dashboard Analítico</h3>
+                        <p>Panel de control con gráficos interactivos y visualización de datos.</p>
+                    </div>
+                </div>
+                <div class="project-card glass-panel">
+                    <div class="project-image">Proyecto 3</div>
+                    <div class="project-info">
+                        <h3>Landing Page Interactiva</h3>
+                        <p>Página de aterrizaje con animaciones al hacer scroll y elementos 3D.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="showcase" class="showcase-section">
+            <h2 class="section-title">3D Showcase</h2>
+            <p class="showcase-desc">Explora este modelo 3D interactivo. Usa el ratón para rotar, hacer zoom y desplazar la vista.</p>
+            <div class="canvas-wrapper glass-panel">
+                <!-- Contenedor preparado para visualizar el modelo 3D -->
+                <div id="canvas-container"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="glass-footer">
+        <div class="contact-info">
+            <p>¿Quieres trabajar conmigo?</p>
+            <a href="mailto:contacto@juanperez.dev">contacto@juanperez.dev</a>
+        </div>
+        <div class="social-links">
+            <a href="#">GitHub</a>
+            <a href="#">LinkedIn</a>
+            <a href="#">Twitter</a>
+        </div>
+        <p class="copyright">© 2026 Juan Pérez. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Script principal como módulo -->
+    <script type="module" src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+// ==========================================
+// 1. Configuración Básica (Escena, Cámara, Renderer)
+// ==========================================
+const container = document.getElementById('canvas-container');
+
+// Crear la escena
+const scene = new THREE.Scene();
+
+// Crear la cámara (Perspectiva)
+const camera = new THREE.PerspectiveCamera(
+    45, 
+    container.clientWidth / container.clientHeight, 
+    0.1, 
+    1000
+);
+// Posicionar la cámara
+camera.position.set(0, 2, 7);
+
+// Crear el Renderer (WebGL) con antialiasing y fondo transparente
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setSize(container.clientWidth, container.clientHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Optimización
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.0;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+// Añadir el canvas al contenedor HTML
+container.appendChild(renderer.domElement);
+
+
+// ==========================================
+// 2. Iluminación (Ambient e Impact Light)
+// ==========================================
+
+// Luz Ambiental: Iluminación base suave
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.8); 
+scene.add(ambientLight);
+
+// Luz Direccional (Impact Light / Sol) para generar sombras y volumen
+const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+directionalLight.position.set(5, 10, 7.5);
+directionalLight.castShadow = true;
+directionalLight.shadow.camera.near = 0.5;
+directionalLight.shadow.camera.far = 25;
+directionalLight.shadow.bias = -0.001;
+scene.add(directionalLight);
+
+// Luz de relleno (Impact Light secundaria) para resaltar detalles
+const fillLight = new THREE.PointLight(0x38bdf8, 5, 20); // Azul claro
+fillLight.position.set(-5, 3, -5);
+scene.add(fillLight);
+
+
+// ==========================================
+// 3. Controles de Órbita (OrbitControls)
+// ==========================================
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; // Rotación y movimiento suaves
+controls.dampingFactor = 0.05;
+controls.enablePan = true;  // Permitir desplazamiento
+controls.enableZoom = true; // Permitir zoom
+controls.minDistance = 2;   // Distancia mínima de zoom
+controls.maxDistance = 20;  // Distancia máxima de zoom
+
+
+// ==========================================
+// 4. Carga del Modelo 3D (GLTFLoader)
+// ==========================================
+const loader = new GLTFLoader();
+let mixer; // Variable para manejar animaciones del modelo si las tiene
+
+// =================================================================
+// // INSERTAR RUTA DEL MODELO BLENDER AQUÍ
+// =================================================================
+const modelPath = ''; // Ejemplo: 'models/mi_modelo.glb' o 'models/mi_modelo.gltf'
+
+if (modelPath) {
+    // Si hay una ruta especificada, se carga el modelo
+    loader.load(
+        modelPath,
+        (gltf) => {
+            const model = gltf.scene;
+            
+            // Centrar el modelo automáticamente
+            const box = new THREE.Box3().setFromObject(model);
+            const center = box.getCenter(new THREE.Vector3());
+            model.position.sub(center);
+            
+            // Habilitar sombras en todos los meshes del modelo
+            model.traverse((child) => {
+                if (child.isMesh) {
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                }
+            });
+
+            scene.add(model);
+
+            // Iniciar animaciones si el modelo las contiene
+            if (gltf.animations && gltf.animations.length > 0) {
+                mixer = new THREE.AnimationMixer(model);
+                gltf.animations.forEach((clip) => {
+                    mixer.clipAction(clip).play();
+                });
+            }
+        },
+        (xhr) => {
+            console.log((xhr.loaded / xhr.total * 100) + '% del modelo cargado');
+        },
+        (error) => {
+            console.error('Error al cargar el modelo 3D:', error);
+        }
+    );
+} else {
+    // Geometría de ejemplo interactiva en caso de que no se inserte un modelo
+    console.log("No se especificó ruta del modelo. Mostrando geometría 3D de ejemplo.");
+    const geometry = new THREE.IcosahedronGeometry(1.5, 0);
+    const material = new THREE.MeshStandardMaterial({ 
+        color: 0x38bdf8,
+        metalness: 0.6,
+        roughness: 0.2,
+        wireframe: true // Estética "developer"
+    });
+    const placeholderMesh = new THREE.Mesh(geometry, material);
+    placeholderMesh.castShadow = true;
+    scene.add(placeholderMesh);
+    
+    // Geometría interna sólida
+    const innerGeo = new THREE.IcosahedronGeometry(1.4, 0);
+    const innerMat = new THREE.MeshStandardMaterial({ 
+        color: 0x0f172a,
+        metalness: 0.8,
+        roughness: 0.1
+    });
+    const innerMesh = new THREE.Mesh(innerGeo, innerMat);
+    placeholderMesh.add(innerMesh);
+}
+
+
+// ==========================================
+// 5. Ciclo de Animación (Render Loop)
+// ==========================================
+const clock = new THREE.Clock();
+
+function animate() {
+    requestAnimationFrame(animate);
+
+    const delta = clock.getDelta();
+    
+    // Actualizar animaciones del modelo cargado
+    if (mixer) {
+        mixer.update(delta);
+    }
+
+    // Rotación suave continua de la geometría de ejemplo si no hay modelo
+    if (!modelPath) {
+        const mesh = scene.children.find(c => c.type === 'Mesh');
+        if (mesh) {
+            mesh.rotation.x += 0.002;
+            mesh.rotation.y += 0.005;
+        }
+    }
+
+    // Actualizar controles en cada frame (requerido para el Damping)
+    controls.update();
+
+    // Renderizar la escena
+    renderer.render(scene, camera);
+}
+
+animate();
+
+
+// ==========================================
+// 6. Responsividad del Canvas
+// ==========================================
+window.addEventListener('resize', () => {
+    // Calculamos el tamaño basándonos en el contenedor padre, 
+    // asegurando que se adapte perfectamente a la sección y CSS
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+
+    // Actualizar la relación de aspecto de la cámara
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+
+    // Actualizar el tamaño del renderizador
+    renderer.setSize(width, height);
+});
