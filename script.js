@@ -77,7 +77,7 @@ let mixer; // Variable para manejar animaciones del modelo si las tiene
 // =================================================================
 // // INSERTAR RUTA DEL MODELO BLENDER AQUÍ
 // =================================================================
-const modelPath = ''; // Ejemplo: 'models/mi_modelo.glb' o 'models/mi_modelo.gltf'
+const modelPath = 'Habitacion.glb'; // Ejemplo: 'models/mi_modelo.glb' o 'models/mi_modelo.gltf'
 
 if (modelPath) {
     // Si hay una ruta especificada, se carga el modelo
@@ -192,3 +192,29 @@ window.addEventListener('resize', () => {
     // Actualizar el tamaño del renderizador
     renderer.setSize(width, height);
 });
+
+
+// ==========================================
+// 7. Theme Toggle Logic (Claro/Oscuro)
+// ==========================================
+const themeToggleBtn = document.getElementById('theme-toggle');
+const rootElement = document.documentElement;
+const themeIcon = themeToggleBtn.querySelector('.icon');
+
+// Verificar preferencia guardada o por defecto oscuro
+const savedTheme = localStorage.getItem('theme') || 'dark';
+rootElement.setAttribute('data-theme', savedTheme);
+updateThemeIcon(savedTheme);
+
+themeToggleBtn.addEventListener('click', () => {
+    const currentTheme = rootElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    rootElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateThemeIcon(newTheme);
+});
+
+function updateThemeIcon(theme) {
+    themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+}
