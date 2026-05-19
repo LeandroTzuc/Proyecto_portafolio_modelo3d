@@ -67,12 +67,70 @@ controls.enableZoom = true; // Permitir zoom
 controls.minDistance = 2;   // Distancia mínima de zoom
 controls.maxDistance = 20;  // Distancia máxima de zoom
 
+// --- Lógica para Auto-rotación e Interacción ---
+let isInteracting = false;
+let interactionTimeout;
+
+controls.addEventListener('start', () => {
+    isInteracting = true;
+    clearTimeout(interactionTimeout);
+});
+
+controls.addEventListener('end', () => {
+    // Reanudar la auto-rotación tras 1.5 segundos de inactividad
+    interactionTimeout = setTimeout(() => {
+        isInteracting = false;
+    }, 1500);
+});
+
+
+// ==========================================
+// 3.5. Sistema de Partículas (Polvo Estelar)
+// ==========================================
+// Crear textura circular suave usando Canvas
+const particleCanvas = document.createElement('canvas');
+particleCanvas.width = 32;
+particleCanvas.height = 32;
+const particleCtx = particleCanvas.getContext('2d');
+const particleGradient = particleCtx.createRadialGradient(16, 16, 0, 16, 16, 16);
+particleGradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+particleGradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+particleCtx.fillStyle = particleGradient;
+particleCtx.fillRect(0, 0, 32, 32);
+const particleTexture = new THREE.CanvasTexture(particleCanvas);
+
+// Geometría y posiciones de las partículas
+const particlesGeometry = new THREE.BufferGeometry();
+const particlesCount = 600;
+const posArray = new Float32Array(particlesCount * 3);
+
+for (let i = 0; i < particlesCount * 3; i++) {
+    // Distribuir en un volumen amplio alrededor del origen
+    posArray[i] = (Math.random() - 0.5) * 20;
+}
+particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+// Material de las partículas
+const particlesMaterial = new THREE.PointsMaterial({
+    size: 0.1,
+    map: particleTexture,
+    transparent: true,
+    opacity: 0.5,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false, // Evitar que corten otros objetos
+    color: 0x38bdf8
+});
+
+const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+scene.add(particlesMesh);
+
 
 // ==========================================
 // 4. Carga del Modelo 3D (GLTFLoader)
 // ==========================================
 const loader = new GLTFLoader();
 let mixer; // Variable para manejar animaciones del modelo si las tiene
+let loadedModel = null; // Referencia al modelo para la auto-rotación
 
 // =================================================================
 // // INSERTAR RUTA DEL MODELO BLENDER AQUÍ
@@ -85,6 +143,7 @@ if (modelPath) {
         modelPath,
         (gltf) => {
             const model = gltf.scene;
+            loadedModel = model; // Guardar referencia para rotarlo en animate()
             
             // Centrar el modelo automáticamente
             const box = new THREE.Box3().setFromObject(model);
@@ -155,6 +214,17 @@ function animate() {
     // Actualizar animaciones del modelo cargado
     if (mixer) {
         mixer.update(delta);
+    }
+
+    // Auto-rotación del modelo cargado con reanudación post-interacción
+    if (loadedModel && !isInteracting) {
+        loadedModel.rotation.y += 0.0015; // Velocidad de giro lenta
+    }
+
+    // Animación suave de las partículas flotando/girando
+    if (particlesMesh) {
+        particlesMesh.rotation.y -= 0.0003; // Rotación lenta y contraria
+        particlesMesh.rotation.x += 0.0001;
     }
 
     // Rotación suave continua de la geometría de ejemplo si no hay modelo
