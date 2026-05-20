@@ -17,8 +17,8 @@ const camera = new THREE.PerspectiveCamera(
     0.1, 
     1000
 );
-// Posicionar la cámara
-camera.position.set(0, 2, 7);
+// Posicionar la cámara: Cuadrante opuesto para forzar la vista desde el frente (ejes invertidos)
+camera.position.set(-8, 7, -8);
 
 // Crear el Renderer (WebGL) con antialiasing y fondo transparente
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -74,6 +74,11 @@ controls.enablePan = true;  // Permitir desplazamiento
 controls.enableZoom = true; // Permitir zoom
 controls.minDistance = 2;   // Distancia mínima de zoom
 controls.maxDistance = 20;  // Distancia máxima de zoom
+
+// Apuntar al centro real de la escena y limitar el ángulo
+controls.target.set(0, 1, 0);
+controls.maxPolarAngle = Math.PI / 2;
+controls.update(); // Reajustar el pivote de rotación inicial
 
 // --- Lógica para Auto-rotación e Interacción ---
 let isInteracting = false;
