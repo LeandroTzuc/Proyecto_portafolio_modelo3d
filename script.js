@@ -24,6 +24,7 @@ camera.position.set(0, 2, 7);
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setSize(container.clientWidth, container.clientHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Optimización
+renderer.outputColorSpace = THREE.SRGBColorSpace; // Asegurar colores correctos en las texturas
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.0;
 renderer.shadowMap.enabled = true;
@@ -34,24 +35,31 @@ container.appendChild(renderer.domElement);
 
 
 // ==========================================
-// 2. Iluminación (Ambient e Impact Light)
+// 2. Iluminación (Ambient, Focal y Relleno)
 // ==========================================
 
-// Luz Ambiental: Iluminación base suave
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.8); 
+// Luz Ambiental: Iluminación base neutra para rebote
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.7); 
 scene.add(ambientLight);
 
-// Luz Direccional (Impact Light / Sol) para generar sombras y volumen
-const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
-directionalLight.position.set(5, 10, 7.5);
+// Luz Focal/Techo (DirectionalLight) para generar volumen y sombras
+const directionalLight = new THREE.DirectionalLight(0xffffff, 1.8);
+directionalLight.position.set(5, 10, 5);
 directionalLight.castShadow = true;
+directionalLight.shadow.mapSize.width = 1024;
+directionalLight.shadow.mapSize.height = 1024;
 directionalLight.shadow.camera.near = 0.5;
 directionalLight.shadow.camera.far = 25;
 directionalLight.shadow.bias = -0.001;
+// Ampliar cámara de sombras para abarcar la habitación entera
+directionalLight.shadow.camera.left = -10;
+directionalLight.shadow.camera.right = 10;
+directionalLight.shadow.camera.top = 10;
+directionalLight.shadow.camera.bottom = -10;
 scene.add(directionalLight);
 
-// Luz de relleno (Impact Light secundaria) para resaltar detalles
-const fillLight = new THREE.PointLight(0x38bdf8, 5, 20); // Azul claro
+// Luz de Apoyo Frontal (Directional secundaria) muy tenue
+const fillLight = new THREE.DirectionalLight(0xffffff, 0.4); 
 fillLight.position.set(-5, 3, -5);
 scene.add(fillLight);
 
@@ -135,7 +143,7 @@ let loadedModel = null; // Referencia al modelo para la auto-rotación
 // =================================================================
 // // INSERTAR RUTA DEL MODELO BLENDER AQUÍ
 // =================================================================
-const modelPath = 'Habitacion.glb'; // Ejemplo: 'models/mi_modelo.glb' o 'models/mi_modelo.gltf'
+const modelPath = 'assets/Habitacion.glb'; // Ruta actualizada a la carpeta assets. Cambia el nombre del archivo aquí si decides usar otro modelo 3D.
 
 if (modelPath) {
     // Si hay una ruta especificada, se carga el modelo
@@ -150,11 +158,22 @@ if (modelPath) {
             const center = box.getCenter(new THREE.Vector3());
             model.position.sub(center);
             
-            // Habilitar sombras en todos los meshes del modelo
+            // Habilitar sombras y corregir materiales (cuadros planos, transparencias)
             model.traverse((child) => {
                 if (child.isMesh) {
                     child.castShadow = true;
                     child.receiveShadow = true;
+
+                    if (child.material) {
+                        // Forzar a que los materiales se vean desde ambos lados (soluciona planos invisibles de espaldas)
+                        child.material.side = THREE.DoubleSide;
+                        
+                        // Asegurar que las transparencias (como PNGs en cuadros) no causen fallos de profundidad
+                        if (child.material.transparent) {
+                            child.material.depthWrite = true;
+                            child.material.alphaTest = 0.05; // Ayuda a recortar bordes transparentes
+                        }
+                    }
                 }
             });
 
