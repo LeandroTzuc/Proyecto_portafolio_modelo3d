@@ -159,16 +159,17 @@ section {
     margin-bottom: 1.5rem;
 }
 
-.avatar {
+.profile-picture {
     border-radius: 50%;
-    border: 4px solid var(--accent-color);
-    box-shadow: 0 0 20px var(--accent-glow);
+    border: 3px solid #3498db;
+    box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
     width: 150px;
     height: 150px;
+    object-fit: cover;
     transition: transform 0.3s ease;
 }
 
-.avatar:hover {
+.profile-picture:hover {
     transform: scale(1.05);
 }
 
@@ -419,23 +420,110 @@ section {
 
 /* Media Queries para Responsividad */
 @media (max-width: 768px) {
+    /* 0. Eliminar Desbordamientos (Overflow) */
+    body, html {
+        overflow-x: hidden;
+        width: 100%;
+    }
+
+    /* 1. Header y Menú de Navegación */
+    .glass-header {
+        flex-direction: column;
+        padding: 1rem;
+        gap: 1rem;
+    }
+
     .nav-links {
-        display: none; /* En un caso real se implementaría un menú hamburguesa */
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px; /* Espacio uniforme entre enlaces */
+        width: 100%;
     }
     
+    .nav-links a {
+        font-size: 14px; /* Letra ligeramente más pequeña para que quepa */
+        padding: 5px 8px;
+    }
+    
+    .theme-toggle-btn {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+    }
+
     .logo {
         font-size: 1.2rem;
+        align-self: flex-start;
+        margin-top: 0.2rem;
+    }
+    
+    /* 2. Paddings y Márgenes Generales */
+    section {
+        padding: 8rem 20px 3rem; /* Reducción de padding lateral */
+    }
+    
+    .hero-content {
+        width: 90%;
+        max-width: 400px;
+        margin: 0 auto; /* Centrado horizontal automático */
+        padding: 2rem 1.5rem;
+        box-sizing: border-box;
+    }
+
+    /* 3. Avatar centrado y escalado */
+    .avatar-container {
+        display: flex;
+        justify-content: center;
+    }
+    
+    .profile-picture {
+        width: 120px;
+        height: 120px;
     }
     
     .hero-content h1 {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
     }
     
-    section {
-        padding: 6rem 5% 3rem;
+    .section-title {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    /* 4. Sección Proyecto Destacado */
+    .project-card {
+        max-width: 95%; /* Escalar en pantallas angostas */
     }
     
+    .project-image {
+        height: 220px; /* Ajuste de altura del video */
+    }
+    
+    .project-info h3 {
+        font-size: 1.2rem; /* Tipografía ligeramente menor */
+    }
+    
+    .project-info p {
+        font-size: 0.9rem;
+    }
+    
+    .project-link {
+        width: 100%;
+        text-align: center;
+        padding: 14px 20px; /* Área táctil más cómoda */
+    }
+
+    /* 5. Contenedor Modelo 3D */
     .canvas-wrapper {
         height: 50vh;
+        min-height: 350px;
+        max-height: 450px;
+        /* Al no ser 100vh, permite hacer scroll en el resto de la página */
+    }
+    
+    .about-content {
+        padding: 2rem 1.5rem;
+        font-size: 1rem;
     }
 }
