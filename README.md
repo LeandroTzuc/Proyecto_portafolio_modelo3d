@@ -1,24 +1,24 @@
-# 🚀 3D Interactive Portfolio
+# 🚀 3D Interactive Web Portfolio
 
-## 📖 Description
+Welcome to my professional portfolio! This project is an immersive web experience showcasing my skills in Frontend development and 3D graphics integration directly in the browser.
 
-An engaging and professional web portfolio featuring interactive 3D elements and smooth animations. This project serves as a showcase of modern web development skills, blending semantic structure, dynamic styling, and immersive 3D graphics to create a standout user experience.
+## 👤 Author
+
+**Leandro Emilio Tzuc Rodriguez**
 
 ## ✨ Core Features
 
-*   **Semantic HTML5:** Clean, accessible, and well-structured markup.
-*   **Mobile-First Responsive Design:** Fully optimized layouts that look great on any device, from smartphones to large desktop screens.
-*   **Dynamic Theme Switching:** Built-in Light/Dark mode toggling powered by CSS variables for a customized viewing experience.
-*   **3D Showcase Section:** A dedicated interactive canvas rendering 3D models seamlessly within the web page.
+* **🎮 Interactive 3D Scene**: A detailed representation of a gamer room using Three.js, featuring `.glb` model loading, smooth camera orbiting, and realistic textures.
+* **🎥 Featured Project**: An interactive section displaying a login interface enriched with advanced Rive animations and a seamlessly integrated looping video.
+* **📱 Fully Responsive Design**: A modern, fluid interface perfectly adapted to deliver an optimal user experience across mobile devices, tablets, and desktops.
 
 ## 🛠️ Tech Stack & Libraries
 
-*   **HTML5**
-*   **CSS3** (with CSS Variables for theming)
-*   **JavaScript (ES6+)**
-*   **Three.js:** Integrated via CDN for rendering the 3D scene.
-*   **GLTFLoader:** Used to load standard `.glb` / `.gltf` 3D model formats.
-*   **OrbitControls:** Enables interactive camera manipulation, allowing users to rotate, zoom, and pan around the 3D object.
+* 🟠 **HTML5**
+* 🔵 **CSS3**
+* 🟡 **JavaScript ES6**
+* 🧊 **Three.js**
+* 🎬 **Rive**
 
 ## 🚀 Local Setup Instructions
 
@@ -47,9 +47,8 @@ Want to use your own custom 3D model from Blender? Follow these steps:
 3.  **Replace the existing model:** Copy your new `.glb` file into the project directory, overwriting the existing file.
 4.  **Clear Browser Cache:** This is **crucial**. Browsers aggressively cache 3D models. To see your changes, you must perform a hard refresh on the page. Press `Ctrl + F5` (Windows/Linux) or `Cmd + Shift + R` (Mac) to clear the cache and reload the new model.
 
-## 👤 Author
+## 📬 Contact
 
-**[Your Name]**
+If you're interested in my work or want to get in touch, feel free to send me an email:
 
-*   GitHub: [@yourusername](https://github.com/yourusername)
-*   LinkedIn: [Your Profile](https://linkedin.com/in/yourprofile)
+* 📧 **Email**: [tzucrodriguez2005@gmail.com](mailto:tzucrodriguez2005@gmail.com)
