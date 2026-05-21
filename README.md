@@ -47,6 +47,15 @@ Want to use your own custom 3D model from Blender? Follow these steps:
 3.  **Replace the existing model:** Copy your new `.glb` file into the project directory, overwriting the existing file.
 4.  **Clear Browser Cache:** This is **crucial**. Browsers aggressively cache 3D models. To see your changes, you must perform a hard refresh on the page. Press `Ctrl + F5` (Windows/Linux) or `Cmd + Shift + R` (Mac) to clear the cache and reload the new model.
 
+## 🎨 3D Assets Credits
+
+The 3D models used in this interactive scene are sourced from Sketchfab. Special thanks to the creators:
+
+*   [Connor's Tomahawk](https://sketchfab.com/3d-models/connors-tomahawk-18f3f8640d444f709a697d091813425b)
+*   [Ezio Auditore Figurine](https://sketchfab.com/3d-models/ezio-auditore-figurine-a3e3b9d9a99e441ab0de59297bb4f266)
+*   [Nendoroid](https://sketchfab.com/3d-models/nendoroid-515b195e31484f6a829defa637fe6c60)
+*   [Audifonos04 (Gaming Headphones)](https://sketchfab.com/3d-models/audifonos04-576cecb8f6624818869f03bbf1218adb)
+
 ## 📬 Contact
 
 If you're interested in my work or want to get in touch, feel free to send me an email:
